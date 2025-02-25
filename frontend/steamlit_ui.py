@@ -5,27 +5,38 @@ import requests
 SEARCH_API_URL = "https://llm-crawler-wv6a.onrender.com/search"
 WARMUP_API_URL = "https://llm-crawler-wv6a.onrender.com/warmup"
 
-# 🔥 Ping the warm-up endpoint on app startup
+# 🔥 Check if the warm-up status is already stored in the query parameters
+query_params = st.query_params
+warmup_status = query_params.get("warmup", "Checking API status...")
+
+# 🔥 Ping the warm-up endpoint only if not already warmed up
 @st.cache_data
 def warm_up_flask():
+    global warmup_status
+    if warmup_status == "✅ API is warm and ready!":
+        return  # Don't ping if already warm
+
     try:
         response = requests.get(WARMUP_API_URL)
         if response.status_code == 200:
-            st.session_state["flask_warmup"] = "✅ API is warm and ready!"
+            warmup_status = "✅ API is warm and ready!"
         else:
-            st.session_state["flask_warmup"] = "⚠️ API might be slow due to cold start."
+            warmup_status = "⚠️ API might be slow due to cold start."
     except requests.exceptions.RequestException:
-        st.session_state["flask_warmup"] = "❌ API is unreachable."
+        warmup_status = "❌ API is unreachable."
 
-# Run the warm-up function when the app starts
+    # Store warm-up status in URL query parameters
+    st.query_params["warmup"] = warmup_status
+
+# Run the warm-up function on app start
 warm_up_flask()
 
 # Streamlit UI
 st.title("LLM-Powered Web Crawler")
 st.write("Enter a query to fetch, scrape, and summarize relevant web pages.")
 
-# Show API warm-up status
-st.info(st.session_state.get("flask_warmup", "Checking API status..."))
+# Show API warm-up status (persistent even after refresh)
+st.info(warmup_status)
 
 # User input
 query = st.text_input("Search Query")
