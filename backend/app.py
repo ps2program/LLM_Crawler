@@ -117,6 +117,20 @@ def search():
 
 #     return jsonify({"query": query, "results": results})
 
+import time
+
+@app.route("/warmup", methods=["GET"])
+def warmup():
+    """Warm-up endpoint to pre-load the Flask API, Tavily search, and LLM model."""
+    try:
+
+        # Wait for 30 seconds
+        time.sleep(30)
+
+        return jsonify({"status": "Warmup successful"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == "__main__":
