@@ -1,22 +1,32 @@
-
 import streamlit as st
 import requests
+import json  # ✅ Import JSON for safe parsing
 
-# Streamlit UI
+# API_URL = "http://127.0.0.1:8000/search"
+API_URL = "https://llm-crawler-wv6a.onrender.com/search"
+
 st.title("LLM-Powered Web Crawler")
 st.write("Enter a query to fetch, scrape, and summarize relevant web pages.")
 
 query = st.text_input("Search Query")
 if st.button("Search") and query:
-    with st.spinner("Fetching and processing data..."):
-        # Change URL to your Render Flask API
-        API_URL = "https://llm-crawler-wv6a.onrender.com/search"
-        response = requests.get(API_URL, params={"query": query})
-        if response.status_code == 200:
-            results = response.json()["results"]
-            st.subheader("Results:")
-            for result in results:
-                st.markdown(f"### [{result['url']}]({result['url']})")
-                st.write(result["summary"])
-        else:
-            st.error("Failed to fetch results. Please try again.")
+    st.subheader("Results:")
+    response = requests.get(API_URL, params={"query": query}, stream=True)
+    
+    result_placeholder = st.empty()
+    result_text = ""
+
+    for line in response.iter_lines():
+        if line:
+            try:
+                data = line.decode("utf-8").replace("data: ", "").strip()
+                json_data = json.loads(data)  # ✅ Safe JSON parsing
+
+                if "url" in json_data:
+                    result_text += f"\n### [{json_data['url']}]({json_data['url']})\n"
+                if "summary" in json_data and json_data["summary"]:  # ✅ Check if summary is valid
+                    result_text += json_data["summary"] + " "
+                
+                result_placeholder.markdown(result_text)
+            except json.JSONDecodeError as e:
+                st.error(f"Error processing response: {e}")
