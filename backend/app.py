@@ -88,50 +88,6 @@ def search():
             results.append({"url": url, "summary": f"Error: {str(e)}"})
     
     return jsonify({"query": query, "results": results})
-# @app.route("/search", methods=["GET"])
-# def search():
-#     """Handle search requests: Fetch URLs, scrape content, combine with provided data, and summarize."""
-#     query = request.args.get("query")
-#     if not query:
-#         return jsonify({"error": "Query parameter is required"}), 400
-    
-#     urls = fetch_urls(query)
-#     results = []
-    
-#     for url_data in urls:
-#         try:
-#             url = url_data["url"]
-#             provided_content = url_data["url"] # Get Tavily's content if available
-
-#             # Scrape content from the webpage
-#             scraped_content = scrape_content(url)
-
-#             # Combine both sources
-#             full_content = f"{provided_content}\n\n{scraped_content}".strip()
-
-#             # Summarize the combined content
-#             summary = summarize_content(full_content)
-#             results.append({"url": url, "summary": summary})
-#         except Exception as e:
-#             results.append({"url": url, "summary": f"Error: {str(e)}"})
-
-#     return jsonify({"query": query, "results": results})
-
-import time
-
-@app.route("/warmup", methods=["GET"])
-def warmup():
-    """Warm-up endpoint to pre-load the Flask API, Tavily search, and LLM model."""
-    try:
-
-        # Wait for 30 seconds
-        # time.sleep(30)
-
-        return jsonify({"status": "Warmup successful"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
