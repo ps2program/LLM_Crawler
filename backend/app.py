@@ -80,7 +80,8 @@ def search():
     for url_data in urls:
         try:
             url = url_data["url"]
-            content = scrape_content(url)
+            # content = scrape_content(url)
+            content = url_data["content"]
             summary = summarize_content(content)
             results.append({"url": url, "summary": summary})
         except Exception as e:
