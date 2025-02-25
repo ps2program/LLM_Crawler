@@ -9,7 +9,7 @@ query = st.text_input("Search Query")
 if st.button("Search") and query:
     with st.spinner("Fetching and processing data..."):
         # Change URL to your Render Flask API
-        API_URL = "https://llm-crawler-wv6a.onrender.com"
+        API_URL = "https://llm-crawler-wv6a.onrender.com/search"
         response = requests.get(API_URL, params={"query": query})
         if response.status_code == 200:
             results = response.json()["results"]
