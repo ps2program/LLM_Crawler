@@ -13,7 +13,7 @@ app = Flask(__name__)
 celery = Celery("tasks", broker="redis://localhost:6379/0")
 
 # Initialize OpenAI client (Local LM Studio)
-client = OpenAI(base_url="hhttps://major-legible-walrus.ngrok-free.app/v1", api_key="lm-studio")
+client = OpenAI(base_url="https://major-legible-walrus.ngrok-free.app/v1", api_key="lm-studio")
 
 def fetch_urls(query):
     """Fetch relevant URLs using Tavily API"""
