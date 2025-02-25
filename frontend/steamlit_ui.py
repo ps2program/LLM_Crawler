@@ -2,10 +2,13 @@ import streamlit as st
 import requests
 import json  # ✅ Import JSON for safe parsing
 
+# Set page title and favicon
+st.set_page_config(page_title="Generative Search", page_icon="🔍")
+
 # API_URL = "http://127.0.0.1:8000/search"
 API_URL = "https://llm-crawler-wv6a.onrender.com/search"
 
-st.title("LLM-Powered Web Crawler")
+st.title("Generative Search")
 st.write("Enter a query to fetch, scrape, and summarize relevant web pages.")
 
 query = st.text_input("Search Query")
