@@ -1,0 +1,8 @@
+flask
+gunicorn
+requests
+bs4
+playwright
+openai
+celery
+redis
