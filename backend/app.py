@@ -125,7 +125,7 @@ def warmup():
     try:
 
         # Wait for 30 seconds
-        time.sleep(30)
+        # time.sleep(30)
 
         return jsonify({"status": "Warmup successful"}), 200
     except Exception as e:
